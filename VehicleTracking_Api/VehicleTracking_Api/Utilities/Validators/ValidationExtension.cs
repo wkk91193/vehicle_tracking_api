@@ -7,11 +7,11 @@ namespace VehicleTracking_Api.Utilities.Validators
 {
     public static class ValidationExtension
     {
-        public static bool IsValid(this UserModel userModel, out IEnumerable<string> errors)
+        public static bool IsValid(this RegisterUserModel registerUserModel, out IEnumerable<string> errors)
         {
-            var validator = new UserModelValidator();
+            var validator = new RegisterUserModelValidator();
 
-            var validationResult = validator.Validate(userModel);
+            var validationResult = validator.Validate(registerUserModel);
 
             errors = AggregateErrors(validationResult);
 

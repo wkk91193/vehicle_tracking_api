@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>VehicleTracking_Api</name>
+    </assembly>
+    <members>
+        <!-- Badly formed XML comment ignored for member "M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)" -->
+    </members>
+</doc>
