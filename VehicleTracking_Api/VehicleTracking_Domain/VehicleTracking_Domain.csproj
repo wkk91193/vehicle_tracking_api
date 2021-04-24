@@ -7,8 +7,4 @@
   <ItemGroup>
     <ProjectReference Include="..\VehicleTracking_Data\VehicleTracking_Data.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Services\Interfaces\" />
-  </ItemGroup>
 </Project>

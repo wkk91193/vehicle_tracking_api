@@ -1,24 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using VehicleTracking_Api.Controller.DependencyInjection;
+using VehicleTracking_Api.DependancyInjection;
 using VehicleTracking_Data.DbContext;
 using VehicleTracking_Data.Identity;
 using VehicleTracking_Domain.Services;
@@ -43,6 +39,8 @@ namespace VehicleTracking_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAppConfiguration(Configuration)
+                    .AddDataServices();
 
             services.AddControllers();
 
@@ -106,7 +104,7 @@ namespace VehicleTracking_Api
         }
         private static void ConfigureTransientServices(IServiceCollection services)
         {
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IVehicleUserService, VehicleUserService>();
         }
 
 
