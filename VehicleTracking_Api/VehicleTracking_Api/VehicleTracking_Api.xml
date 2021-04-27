@@ -4,6 +4,72 @@
         <name>VehicleTracking_Api</name>
     </assembly>
     <members>
-        <!-- Badly formed XML comment ignored for member "M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)" -->
+        <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)">
+            <summary>
+            Registers a new user.
+            </summary>
+            
+            <remarks>
+            Sample request:
+            
+                POST api/User/RegisterUser
+                {        
+                  "firstName": "Micheal",
+                  "lastName": "Andrew",
+                  "userName": "mikeandrew@gmail.com",
+                  "password": "DDF323PFGssd",
+                  "vehicleInfo":{
+                        "vehicleReg":"GA-2345"          
+                   }
+                }
+            </remarks>
+            
+            <param name="newUser"></param>    
+            <returns>Success or Error</returns>
+            <response code="201">Successfully created user</response>
+            <response code="400">Returns, errors,if the user object is invalid</response>  
+        </member>
+        <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterAdminUser(VehicleTracking_Models.Models.RegisterUserModel)">
+            <summary>
+            Registers a new admin user.
+            </summary>
+            
+            <remarks>
+            Sample request:
+            
+                POST api/User/RegisterAdminUser
+                {        
+                  "firstName": "Micheal",
+                  "lastName": "Andrew",
+                  "userName": "mikeandrew@gmail.com",
+                  "password": "DDF323PFGssd"
+                }
+            </remarks>
+            
+            <param name="newUser"></param>    
+            <returns>Success or Error</returns>
+            <response code="201">Successfully created user</response>
+            <response code="400">Returns, errors,if the user object is invalid </response>  
+        </member>
+        <member name="M:VehicleTracking_Api.Controllers.UserController.GetToken(VehicleTracking_Models.Models.LoginUserModel)">
+            <summary>
+            Gets a token for the user
+            </summary>
+            
+            <remarks>
+            Sample request:
+            
+                POST api/User/GetToken
+                {        
+                  "username": "mikeandrew@gmail.com",
+                  "password": "DDF323PFGssd"
+                }
+            </remarks>
+            
+            <param name="loginUser"></param>    
+            <returns>Success or Error</returns>
+            <response code="200">Returns, the token string</response>
+            <response code="400">Returns, errors,if the user object is invalid</response>  
+        </member>
     </members>
 </doc>

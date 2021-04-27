@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VehicleTracking_Data.Identity;
@@ -21,30 +22,49 @@ namespace VehicleTracking_Domain.Services
           
         }
 
-        public async Task<RegisterUserModel> SaveUserToCosmo(RegisterUserModel userModel, string roleType)
+        public async Task<bool> CheckVehicleAlreadyRegistered(string vehicleReg)
         {
-            //throw new NotImplementedException();
+            var result = await this._vehicleUserRepository.CheckVehicleAlreadyRegistered(vehicleReg);
+            return result;
+
+        }
+
+        public async Task<VehicleUser> GetVehicleUserInformationByUsername(string userName)
+        {
+            var result = await this._vehicleUserRepository.GetVehicleUserInformationByUsername(userName);
+            return result;
+
+        }
+
+        public async Task<bool> SaveUserToCosmo(RegisterUserModel userModel, string roleType)
+        {
+            if (await this.CheckVehicleAlreadyRegistered(userModel.VehicleInfo.VehicleReg))
+                return false;
+
             VehicleUser vehicleUser = new VehicleUser();
+            vehicleUser.Id= Guid.NewGuid().ToString();
             vehicleUser.firstName = userModel.FirstName;
             vehicleUser.lastName = userModel.LastName;
             vehicleUser.email = userModel.UserName;
             vehicleUser.roleType = roleType;
-            vehicleUser.vehicleInfo = new List<VehiclePosition>();
-            vehicleUser.Id = Guid.NewGuid().ToString();
-            var result = await this._vehicleUserRepository.AddAsync(vehicleUser);
-            if (result != null)
-            {
-                RegisterUserModel registerUserModel = new RegisterUserModel();
 
-                registerUserModel.FirstName = result.firstName;
-                registerUserModel.LastName = result.lastName;
-                registerUserModel.UserName = result.email;
-                return registerUserModel;
-            }
-            else
-            {
-                return null;
-            }
+            Entities.VehicleInformation vehicleInfo = new Entities.VehicleInformation();
+            vehicleInfo.Id = Guid.NewGuid().ToString();
+            vehicleInfo.vehicleReg = userModel.VehicleInfo.VehicleReg;
+
+            List<VehicleLocation> locationList = new List<VehicleLocation>();
+            vehicleInfo.locations = locationList;
+ 
+         
+            vehicleUser.vehicleInfo = vehicleInfo;
+           
+            var result = await this._vehicleUserRepository.AddAsync(vehicleUser);
+            if (result == null)
+                return false;
+
+            return true;
+               
+              
         }
     }
 }

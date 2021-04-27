@@ -11,6 +11,7 @@ namespace VehicleTracking_Domain.Repository.Interfaces
   
     public interface IVehicleUserRepository : IDataRepository<VehicleUser>
     {
-        
+        public Task<VehicleUser> GetVehicleUserInformationByUsername(string userName);
+        public Task<bool> CheckVehicleAlreadyRegistered(string vehicleReg);
     }
 }

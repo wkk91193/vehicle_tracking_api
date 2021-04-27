@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using FluentValidation;
 using FluentValidation.Validators;
 using VehicleTracking_Models.Models;
@@ -21,10 +22,9 @@ namespace VehicleTracking_Api.Utilities.Validators
 
             RuleFor(userModel => userModel.FirstName).NotEmpty().MinimumLength(2).MaximumLength(20);
             RuleFor(userModel => userModel.LastName).NotEmpty().MinimumLength(2).MaximumLength(20);
+            RuleFor(userModel => userModel.VehicleInfo.VehicleReg).NotEmpty();
+           
         }
-
-  
-        
-       
+     
     }
 }

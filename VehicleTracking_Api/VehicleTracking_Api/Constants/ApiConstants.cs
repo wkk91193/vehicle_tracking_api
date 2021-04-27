@@ -15,5 +15,7 @@ namespace VehicleTracking_Api.Constants
         public const string INVALID_PARAMS_FOR_USER_REGISTRATION = "Invalid params at RegisterUser Errors";
         public const string INTERNAL_SERVER_ERROR_FOR_USER_REGISTRATION = "Internal Server error at RegisterUser";
         public const string SOMETHING_WENT_WRONG = "Something went wrong!";
+        public const string NO_SUCH_USER_EXISTS = "No such user matching the given username";
+        public const string INCORRECT_USERNAME_PASSWORD = "Incorrect username/password";
     }
 }

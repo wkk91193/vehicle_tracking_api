@@ -22,7 +22,7 @@ namespace VehicleTracking_Domain.Entities
         public string roleType { get; set; }
 
         [JsonPropertyName("vehicleInfo")]
-        public List<VehiclePosition> vehicleInfo { get; set; }
+        public VehicleInformation vehicleInfo { get; set; }
       
     }
 }

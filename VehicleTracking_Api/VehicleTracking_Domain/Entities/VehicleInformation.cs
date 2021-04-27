@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,16 +8,13 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Domain.Entities
 {
-    public class VehiclePosition : BaseEntity
+    public class VehicleInformation : BaseEntity
     {
         [JsonPropertyName("vehicleReg")]
         public string vehicleReg { get; set; }
 
-        [JsonPropertyName("currentPosition")]
-        public string currentPosition { get; set; }
+        public List<VehicleLocation> locations { get; set; }
 
-        [JsonPropertyName("timestamp")]
-        public DateTime timestamp { get; set; }
 
     }
 }

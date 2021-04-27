@@ -15,5 +15,7 @@ namespace VehicleTracking_Models.Models
         public string UserName { get; set; }
 
         public string Password { get; set; }
+
+        public VehicleInformation VehicleInfo { get; set; }
     }
 }
