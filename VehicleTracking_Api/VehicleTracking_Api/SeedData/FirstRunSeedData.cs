@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using VehicleTracking_Data.DbContext;
 using VehicleTracking_Data.Identity;
+using VehicleTracking_Domain.Services.Interfaces;
+using VehicleTracking_Models.Models;
 
 namespace VehicleTracking_Api.SeedData
 {
@@ -17,9 +19,10 @@ namespace VehicleTracking_Api.SeedData
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            
-           var userExists = await userManager.FindByNameAsync(config["FirstAdminUserData:Username"]);
-            if (userExists==null)
+            var usersService = serviceProvider.GetRequiredService<IVehicleUserService>();
+
+            var userExists = await userManager.FindByNameAsync(config["FirstAdminUserData:Username"]);
+            if (userExists == null)
             {
                 ApplicationUser user = new ApplicationUser()
                 {
@@ -34,6 +37,14 @@ namespace VehicleTracking_Api.SeedData
                     await roleManager.CreateAsync(new IdentityRole(ApplicationUserRoles.Admin));
 
                 await userManager.AddToRoleAsync(user, ApplicationUserRoles.Admin);
+
+                RegisterAdminUserModel registerAdminUserModel = new RegisterAdminUserModel();
+                registerAdminUserModel.FirstName = config["FirstAdminUserData:FirstName"];
+                registerAdminUserModel.LastName = config["FirstAdminUserData:LastName"];
+                registerAdminUserModel.UserName = config["FirstAdminUserData:Username"];
+                registerAdminUserModel.Password = config["FirstAdminUserData:Password"];
+                await usersService.SaveAdminToCosmo(registerAdminUserModel);
+
             }
         }
     }
