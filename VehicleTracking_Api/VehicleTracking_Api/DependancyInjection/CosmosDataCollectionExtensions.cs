@@ -40,8 +40,9 @@ namespace VehicleTracking_Api.Controller.DependencyInjection
             });
 
             services.AddSingleton<IVehicleUserRepository, VehicleUserRepository>();
-            //services.AddSingleton<IDataRepository<VehiclePosition>, VehiclePositionRepository>();
             services.AddSingleton<IVehicleUserService, VehicleUserService>();
+            services.AddSingleton<IVehicleLocationRepository, VehicleLocationRepository>();
+            services.AddSingleton<IVehicleLocationService, VehicleLocationService>();
 
             return services;
         }
