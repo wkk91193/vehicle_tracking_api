@@ -12,10 +12,16 @@ namespace VehicleTracking_Api.Constants
         public const string STATUS_ERROR = "Error";
         public const string USER_CREATED_SUCCESSFULLY = "User created successfully!";
         public const string STATUS_SUCCESS = "Success";
-        public const string INVALID_PARAMS_FOR_USER_REGISTRATION = "Invalid params at RegisterUser Errors";
-        public const string INTERNAL_SERVER_ERROR_FOR_USER_REGISTRATION = "Internal Server error at RegisterUser";
+        public const string INVALID_PARAMS_GIVEN = "Invalid params given";
+        public const string INTERNAL_SERVER_ERROR = "Internal Server error";
         public const string SOMETHING_WENT_WRONG = "Something went wrong!";
         public const string NO_SUCH_USER_EXISTS = "No such user matching the given username";
-        public const string INCORRECT_USERNAME_PASSWORD = "Incorrect username/password";
+        public const string INCORRECT_USERNAME_PASSWORD = "Incorrect userName/password";
+        public const string VEHICLE_REGISTRATION_ALREADY_FOUND = "Vehicle already registered";
+        public const string NO_SUCH_REGISTERED_USER = "No such user found with the given username.Please register yourself first";
+        public const string USERNAME_OR_VEHICLE_REGISTERATION_DOES_NOT_MATCH = "The given userName or vehicleReg does not match the records on file";
+        public const string LOCATION_RECORDED_SUCCESSFULLY = "Location recorded successfully!";
+            
+
     }
 }

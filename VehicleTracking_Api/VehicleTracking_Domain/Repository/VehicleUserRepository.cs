@@ -25,15 +25,14 @@ namespace VehicleTracking_Domain.Repository
         {
             Container container = GetContainer();
             var entities = new List<VehicleUser>();
-            QueryDefinition queryDefinition = new QueryDefinition("select * from c WHERE c.vehicleInfo.vehicleReg= @vehicleReg")
+            QueryDefinition queryDefinition = new QueryDefinition("select * from c WHERE c.vehicleInfo.vehicleReg=@vehicleReg")
                 .WithParameter("@vehicleReg", vehicleReg);
-
-            FeedIterator<VehicleUser> queryResultSetIterator = container.GetItemQueryIterator<VehicleUser>(queryDefinition);
-            using (FeedIterator<VehicleUser> feedIterator = container.GetItemQueryIterator<VehicleUser>())
+        
+            using (FeedIterator<VehicleUser> queryResultSetIterator = container.GetItemQueryIterator<VehicleUser>(queryDefinition))
             {
-                while (feedIterator.HasMoreResults)
+                while (queryResultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<VehicleUser> response = await feedIterator.ReadNextAsync();
+                    FeedResponse<VehicleUser> response = await queryResultSetIterator.ReadNextAsync();
                     foreach (var entity in response)
                     {
                         entities.Add(entity);
@@ -51,13 +50,12 @@ namespace VehicleTracking_Domain.Repository
             var entities = new List<VehicleUser>();
             QueryDefinition queryDefinition = new QueryDefinition("select * from c where c.email= @username")
                 .WithParameter("@username", userName);
-
-            FeedIterator<VehicleUser> queryResultSetIterator = container.GetItemQueryIterator<VehicleUser>(queryDefinition);
-            using (FeedIterator<VehicleUser> feedIterator = container.GetItemQueryIterator<VehicleUser>())
+          
+            using (FeedIterator<VehicleUser> queryResultSetIterator = container.GetItemQueryIterator<VehicleUser>(queryDefinition))
             {
-                while (feedIterator.HasMoreResults)
+                while (queryResultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<VehicleUser> response = await feedIterator.ReadNextAsync();
+                    FeedResponse<VehicleUser> response = await queryResultSetIterator.ReadNextAsync();
                     foreach (var entity in response)
                     {
                         entities.Add(entity);
