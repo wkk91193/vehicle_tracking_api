@@ -4,6 +4,29 @@
         <name>VehicleTracking_Api</name>
     </assembly>
     <members>
+        <member name="M:VehicleTracking_Api.Controllers.LocationController.RecordPosition(VehicleTracking_Models.Models.RecordPositionModel)">
+            <summary>
+            Vehicle sends GPS coordinates with a timestamp.
+            </summary>
+            
+            <remarks>
+            Sample request:
+            
+                PATCH api/Location/RecordPosition
+                {        
+                  "userName": "dammy12@yahoo.com",
+                  "vehicleReg": "DF-3456",
+                  "latitude": "13.678639",
+                  "longitude": "100.616405",
+                  "timestamp":"2020-07-25T07:26:51.2395361Z"
+                }
+            </remarks>
+            
+            <param name="vehicleLocation"></param>    
+            <returns>Success or Error</returns>
+            <response code="201">Successfully sent location for time t </response>
+            <response code="400">Returns, errors,if the vehicleLocation object is invalid</response>  
+        </member>
         <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)">
             <summary>
             Registers a new user.
@@ -29,7 +52,7 @@
             <response code="201">Successfully created user</response>
             <response code="400">Returns, errors,if the user object is invalid</response>  
         </member>
-        <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterAdminUser(VehicleTracking_Models.Models.RegisterUserModel)">
+        <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterAdminUser(VehicleTracking_Models.Models.RegisterAdminUserModel)">
             <summary>
             Registers a new admin user.
             </summary>

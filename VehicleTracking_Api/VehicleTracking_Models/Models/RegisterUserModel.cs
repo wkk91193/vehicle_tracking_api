@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Models.Models
 {
-    public class RegisterUserModel
+    public class RegisterUserModel:ParentModel
     {
         public string FirstName { get; set; }
 

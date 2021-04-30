@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentValidation;
 using FluentValidation.Results;
 using VehicleTracking_Models.Models;
 
@@ -7,15 +8,11 @@ namespace VehicleTracking_Api.Utilities.Validators
 {
     public static class ValidationExtension
     {
-        public static bool IsValid(this RegisterUserModel registerUserModel, out IEnumerable<string> errors)
+        public static bool CheckModelDataValidity(ParentModelValidator validator, ParentModel model,out IEnumerable<string> errors)
         {
-            var validator = new RegisterUserModelValidator();
-
-            var validationResult = validator.Validate(registerUserModel);
-
-            errors = AggregateErrors(validationResult);
-
-            return validationResult.IsValid;
+            var validateResult=validator.Validate(model);
+            errors = AggregateErrors(validateResult);
+            return validateResult.IsValid;
         }
 
         private static List<string> AggregateErrors(ValidationResult validationResult)
@@ -28,5 +25,6 @@ namespace VehicleTracking_Api.Utilities.Validators
 
             return errors;
         }
+
     }
 }

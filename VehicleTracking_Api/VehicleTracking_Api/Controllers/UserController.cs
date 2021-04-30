@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using VehicleTracking_Api.Constants;
+using VehicleTracking_Api.Utilities.Cleanup;
 using VehicleTracking_Api.Utilities.Security;
 using VehicleTracking_Api.Utilities.Validators;
 using VehicleTracking_Data.Identity;
@@ -78,7 +80,7 @@ namespace VehicleTracking_Api.Controllers
             try
             {
 
-                if (newUser.IsValid(out IEnumerable<string> errors))
+                if (ValidationExtension.CheckModelDataValidity(new RegisterUserModelValidator(newUser), newUser, out IEnumerable<string> errors))
                 {
 
                     var userExists = await _userManager.FindByNameAsync(newUser.UserName);
@@ -107,26 +109,32 @@ namespace VehicleTracking_Api.Controllers
 
                     await _userManager.AddToRoleAsync(user, ApplicationUserRoles.User);
 
-                    var cosmoResult = await _userService.SaveUserToCosmo(newUser, ApplicationUserRoles.User);
-                    _logger.LogInformation("Succesfully registered user @{object}", newUser);
+                    var cosmoResult = await _userService.SaveUserToCosmo(newUser);
+                    if (!cosmoResult)
+                    {
+                        await CleanupResources.RemoveUserFromDBAsync(user, this._userManager);
+                        _logger.LogError(ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND);
+                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND });
+                    }
 
+                    _logger.LogInformation("Succesfully registered user @{object}", newUser);
                     return Ok(new Response { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.USER_CREATED_SUCCESSFULLY });
 
                 }
                 else
                 {
-                    _logger.LogError(ApiConstants.INVALID_PARAMS_FOR_USER_REGISTRATION + "{@errors}", errors);
+                    _logger.LogError(ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
                     return BadRequest(errors);
                 }
             }
             catch (Exception ex)
             {
-                var appUser = await _userManager.FindByNameAsync(newUser.UserName);
-                if (appUser!=null)
+                ApplicationUser user = new ApplicationUser()
                 {
-                    await _userManager.DeleteAsync(appUser);
-                }
-                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR_FOR_USER_REGISTRATION + " {@exception}", ex);
+                    UserName = newUser.UserName
+                };
+                await CleanupResources.RemoveUserFromDBAsync(user, this._userManager);
+                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiConstants.SOMETHING_WENT_WRONG);
 
             }
@@ -158,12 +166,12 @@ namespace VehicleTracking_Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
-        public async Task<IActionResult> RegisterAdminUser([FromBody] RegisterUserModel newUser)
+        public async Task<IActionResult> RegisterAdminUser([FromBody] RegisterAdminUserModel newUser)
         {
             try
             {
 
-                if (newUser.IsValid(out IEnumerable<string> errors))
+                if (ValidationExtension.CheckModelDataValidity(new RegisterAdminUserModelValidator(newUser), newUser, out IEnumerable<string> errors))
                 {
 
                     var userExists = await _userManager.FindByNameAsync(newUser.UserName);
@@ -190,6 +198,8 @@ namespace VehicleTracking_Api.Controllers
 
                     await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Admin);
 
+                    await _userService.SaveAdminToCosmo(newUser);
+
                     _logger.LogInformation("Succesfully registered admin user @{object}", newUser);
 
                     return Ok(new Response { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.USER_CREATED_SUCCESSFULLY });
@@ -197,7 +207,7 @@ namespace VehicleTracking_Api.Controllers
                 }
                 else
                 {
-                    _logger.LogError(ApiConstants.INVALID_PARAMS_FOR_USER_REGISTRATION + "{@errors}", errors);
+                    _logger.LogError(ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
                     return BadRequest(errors);
                 }
             }
@@ -208,7 +218,7 @@ namespace VehicleTracking_Api.Controllers
                 {
                     await _userManager.DeleteAsync(appUser);
                 }
-                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR_FOR_USER_REGISTRATION + " {@exception}", ex);
+                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiConstants.SOMETHING_WENT_WRONG);
 
             }
@@ -242,48 +252,69 @@ namespace VehicleTracking_Api.Controllers
             try
             {
 
-               
-
-                var userExists = await this._userManager.FindByNameAsync(loginUser.Username);
-                if (userExists == null)
+                if (ValidationExtension.CheckModelDataValidity(new LoginUserModelValidator(loginUser), loginUser, out IEnumerable<string> errors))
                 {
-                    _logger.LogError(ApiConstants.NO_SUCH_USER_EXISTS + " {@user}", loginUser);
-                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.NO_SUCH_USER_EXISTS });
+
+                    var userExists = await this._userManager.FindByNameAsync(loginUser.Username);
+                    if (userExists == null)
+                    {
+                        _logger.LogError(ApiConstants.NO_SUCH_USER_EXISTS + " {@user}", loginUser);
+                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.NO_SUCH_USER_EXISTS });
+                    }
+                    var passwordValid = await this._userManager.CheckPasswordAsync(userExists, loginUser.Password);
+                    if (!passwordValid)
+                    {
+                        _logger.LogError(ApiConstants.INCORRECT_USERNAME_PASSWORD + " {@user}", loginUser);
+                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.INCORRECT_USERNAME_PASSWORD });
+                    }
+
+                    var userVehicleInformation = await this._userService.GetVehicleUserInformationByUsername(loginUser.Username);
+
+                    List<Claim> authClaims = null;
+                    if (userVehicleInformation.vehicleInfo.vehicleReg == null)
+                    {
+                        authClaims = new List<Claim>{
+                            new Claim(ClaimTypes.Role,userVehicleInformation.roleType),
+                            new Claim("Username", userVehicleInformation.email),
+                            new Claim("VehicleReg","")
+                        };
+
+                    }
+                    else
+                    {
+                        authClaims = new List<Claim>{
+                            new Claim(ClaimTypes.Role,userVehicleInformation.roleType),
+                            new Claim("Username", userVehicleInformation.email),
+                            new Claim("VehicleReg",userVehicleInformation.vehicleInfo.vehicleReg)
+                        };
+                    }
+
+
+
+                    var token = JWTHelper.GetJwtToken(
+                                          loginUser.Username,
+                                          _configuration["JWT:Secret"],
+                                          _configuration["JWT:ValidIssuer"],
+                                          _configuration["JWT:ValidAudience"],
+                                          TimeSpan.FromDays(Double.Parse(_configuration["JWT:TimeSpan"])),
+                                          authClaims.ToArray());
+
+                    return Ok(new
+                    {
+                        token = new JwtSecurityTokenHandler().WriteToken(token),
+                        expires = token.ValidTo
+                    });
+
                 }
-                var passwordValid = await this._userManager.CheckPasswordAsync(userExists, loginUser.Password);
-                if (!passwordValid)
+                else
                 {
-                    _logger.LogError(ApiConstants.INCORRECT_USERNAME_PASSWORD + " {@user}", loginUser);
-                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.INCORRECT_USERNAME_PASSWORD });
+                    _logger.LogError(ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
+                    return BadRequest(errors);
                 }
-
-                var userVehicleInformation = await this._userService.GetVehicleUserInformationByUsername(loginUser.Username);
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Role,userVehicleInformation.roleType),
-                    new Claim("Username", userVehicleInformation.email),
-                    new Claim("VehicleReg",userVehicleInformation.vehicleInfo.vehicleReg)
-                };
-             
-
-                var token = JWTHelper.GetJwtToken(
-                                      loginUser.Username,
-                                      _configuration["JWT:Secret"],
-                                      _configuration["JWT:ValidIssuer"],
-                                      _configuration["JWT:ValidAudience"],
-                                      TimeSpan.FromDays(Double.Parse(_configuration["JWT:TimeSpan"])),
-                                      authClaims.ToArray());
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expires = token.ValidTo
-                });
-
             }
             catch (Exception ex)
             {
-                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR_FOR_USER_REGISTRATION + " {@exception}", ex);
+                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiConstants.SOMETHING_WENT_WRONG);
 
             }

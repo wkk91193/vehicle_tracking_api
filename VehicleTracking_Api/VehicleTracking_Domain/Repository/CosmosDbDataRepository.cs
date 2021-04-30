@@ -58,14 +58,7 @@ namespace VehicleTracking_Domain.Repository
         {
 
             Container container = GetContainer();
-
-            ItemResponse<BaseEntity> entityResult = await container
-                                                       .ReadItemAsync<BaseEntity>(entity.Id.ToString(), new PartitionKey(entity.Id.ToString()));
-            if (entityResult != null)
-            {
-                await container
-                      .ReplaceItemAsync(entity, entity.Id.ToString(), new PartitionKey(entity.Id.ToString()));
-            }
+            await container.ReplaceItemAsync(entity, entity.Id.ToString(), new PartitionKey(entity.Id.ToString()));          
             return entity;
 
         }

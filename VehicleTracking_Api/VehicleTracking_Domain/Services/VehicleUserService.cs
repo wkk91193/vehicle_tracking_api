@@ -36,35 +36,46 @@ namespace VehicleTracking_Domain.Services
 
         }
 
-        public async Task<bool> SaveUserToCosmo(RegisterUserModel userModel, string roleType)
+        public async Task SaveAdminToCosmo(RegisterAdminUserModel userModel)
+        {
+            VehicleUser vehicleUser = new VehicleUser();
+            vehicleUser.Id = Guid.NewGuid().ToString();
+            vehicleUser.firstName = userModel.FirstName;
+            vehicleUser.lastName = userModel.LastName;
+            vehicleUser.email = userModel.UserName;
+            vehicleUser.roleType = ApplicationUserRoles.Admin;
+
+            Entities.VehicleInformation vehicleInfo = new Entities.VehicleInformation();
+            vehicleUser.vehicleInfo = vehicleInfo;
+
+            await this._vehicleUserRepository.AddAsync(vehicleUser);
+
+        }
+
+        public async Task<bool> SaveUserToCosmo(RegisterUserModel userModel)
         {
             if (await this.CheckVehicleAlreadyRegistered(userModel.VehicleInfo.VehicleReg))
+            {
                 return false;
-
+            }
             VehicleUser vehicleUser = new VehicleUser();
             vehicleUser.Id= Guid.NewGuid().ToString();
             vehicleUser.firstName = userModel.FirstName;
             vehicleUser.lastName = userModel.LastName;
             vehicleUser.email = userModel.UserName;
-            vehicleUser.roleType = roleType;
+            vehicleUser.roleType = ApplicationUserRoles.User;
 
             Entities.VehicleInformation vehicleInfo = new Entities.VehicleInformation();
             vehicleInfo.Id = Guid.NewGuid().ToString();
             vehicleInfo.vehicleReg = userModel.VehicleInfo.VehicleReg;
 
             List<VehicleLocation> locationList = new List<VehicleLocation>();
-            vehicleInfo.locations = locationList;
- 
-         
+            vehicleInfo.locations = locationList;        
             vehicleUser.vehicleInfo = vehicleInfo;
            
-            var result = await this._vehicleUserRepository.AddAsync(vehicleUser);
-            if (result == null)
-                return false;
-
+            await this._vehicleUserRepository.AddAsync(vehicleUser);
             return true;
-               
-              
+                            
         }
     }
 }

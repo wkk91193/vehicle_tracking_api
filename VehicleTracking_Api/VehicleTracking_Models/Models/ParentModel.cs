@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Models.Models
 {
-    public class LoginUserModel:ParentModel
+    public class ParentModel
     {
-      
-        public string Username { get; set; }
-
-        public string Password { get; set; }
     }
 }
