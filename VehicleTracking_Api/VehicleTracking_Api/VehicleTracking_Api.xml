@@ -35,13 +35,14 @@
             <remarks>
             Sample request:
             
-                GET api/Location/DF-3461
+                GET api/Location/GetVehicleLastLocation?vehicleRegNo=DF-3461
             </remarks>
             
             <param name="vehicleRegNo"></param>    
             <response code="200">Vehicle location with the latest timestamp </response>
             <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
         </member>
+        <!-- Badly formed XML comment ignored for member "M:VehicleTracking_Api.Controllers.LocationController.GetVehicleLocationForTimeInterval(System.String,System.String,System.String)" -->
         <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)">
             <summary>
             Registers a new user.

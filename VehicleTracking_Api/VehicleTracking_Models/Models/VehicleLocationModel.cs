@@ -13,5 +13,7 @@ namespace VehicleTracking_Models.Models
         public double Longitude { get; set; }
 
         public string Timestamp { get; set; }
+
+        public string AddressOfLocation { get; set; }
     }
 }

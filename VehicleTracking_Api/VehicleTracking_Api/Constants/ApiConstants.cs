@@ -22,7 +22,11 @@ namespace VehicleTracking_Api.Constants
         public const string NO_SUCH_REGISTERED_USER = "No such user found with the given username.Please register yourself first";
         public const string USERNAME_OR_VEHICLE_REGISTERATION_DOES_NOT_MATCH = "The given userName or vehicleReg does not match the records on file";
         public const string LOCATION_RECORDED_SUCCESSFULLY = "Location recorded successfully!";
-            
+        public const string LATEST_LOCATION_RETRIEVED_SUCCESSFULLY = "Latest location for vehicle retrieved successfully!";
+        public const string NO_LOCATION_RECORDED_FOR_THE_VEHICLE = "No location recorded for the vehicle!";
+        public const string INVALID_DATETIME_FORMAT = "Invalid datetime format please ensure it's yyyy-MM-dd HH:mm:ss.fff";
+        public const string LOCATIONS_RECEIVED_SUCCESSFULLY = "Location(s) received successfully!";
+
 
     }
 }

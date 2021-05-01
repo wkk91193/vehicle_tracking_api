@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using VehicleTracking_Api.Utilities.General;
 using VehicleTracking_Models.Models;
 
 namespace VehicleTracking_Api.Utilities.Validators
@@ -16,15 +17,8 @@ namespace VehicleTracking_Api.Utilities.Validators
             RuleFor(model => recordPositionModel.VehicleReg).NotEmpty();
             RuleFor(model => recordPositionModel.Latitude).NotEmpty().InclusiveBetween(-90, 90).WithMessage("Latitude must be between -90 and 90 degrees inclusive.");
             RuleFor(model => recordPositionModel.Longitude).NotEmpty().InclusiveBetween(-180, 180).WithMessage("Longitude must be between -180 and 180 degrees inclusive.");
-            RuleFor(model => recordPositionModel.Timestamp).Must(BeAValidDateTime).WithMessage("Invalid date time should be of format yyyy-MM-dd HH:mm:ss.fff");
+            RuleFor(model => recordPositionModel.Timestamp).Must(Util.BeAValidDateTime).WithMessage("Invalid date time should be of format yyyy-MM-dd HH:mm:ss.fff");
 
-        }
-
-        private bool BeAValidDateTime(string arg)
-        {
-            DateTime dateTime;
-
-            return DateTime.TryParseExact(arg, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
         }
 
 

@@ -70,7 +70,7 @@ namespace VehicleTracking_Domain.Services
             vehicleInfoEntity.VehicleReg = userModel.VehicleInfo.VehicleReg;
 
             List<VehicleLocationEntity> locationList = new List<VehicleLocationEntity>();
-            vehicleInfoEntity.LocationList = locationList;
+            vehicleInfoEntity.Locations = locationList;
             vehicleUserEntity.VehicleInfo = vehicleInfoEntity;
            
             await this._vehicleUserRepository.AddAsync(vehicleUserEntity);

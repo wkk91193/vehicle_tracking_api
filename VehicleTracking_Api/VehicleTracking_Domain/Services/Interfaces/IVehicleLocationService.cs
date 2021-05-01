@@ -13,5 +13,7 @@ namespace VehicleTracking_Domain.Services.Interfaces
 
         public Task<VehicleInformationModel> GetLatestLocationOfVehicle(string vehicleReg);
 
+        public Task<VehicleInformationModel> GetLocationForVehicleForGivenTime(string vehicleReg,string lowerTimeBound, string upperTimeBound);
+
     }
 }

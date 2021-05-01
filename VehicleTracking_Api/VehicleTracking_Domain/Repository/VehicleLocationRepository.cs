@@ -22,28 +22,64 @@ namespace VehicleTracking_Domain.Repository
         public async Task<VehicleInformationEntity> GetLatestLocationOfVehicle(string vehicleReg)
         {
             Container container = GetContainer();
-            var entities = new List<VehicleInformationEntity>();
+            var entities = new List<VehicleUserEntity>();
             QueryDefinition queryDefinition = new QueryDefinition("select c.vehicleInfo from c WHERE c.vehicleInfo.vehicleReg=@vehicleReg")
                 .WithParameter("@vehicleReg", vehicleReg);
 
-            using (FeedIterator<VehicleInformationEntity> queryResultSetIterator = container.GetItemQueryIterator<VehicleInformationEntity>(queryDefinition))
+            using (FeedIterator<VehicleUserEntity> queryResultSetIterator = container.GetItemQueryIterator<VehicleUserEntity>(queryDefinition))
             {
                 while (queryResultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<VehicleInformationEntity> response = await queryResultSetIterator.ReadNextAsync();
+                    FeedResponse<VehicleUserEntity> response = await queryResultSetIterator.ReadNextAsync();
                     foreach (var entity in response)
                     {
                         entities.Add(entity);
                     }
                 }
             }
-            VehicleInformationEntity vehicleInformation = entities.FirstOrDefault();
-            List<VehicleLocationEntity> locationList = entities.FirstOrDefault().LocationList;
+            if (entities.Count == 0 || entities.FirstOrDefault().VehicleInfo.Locations.Count==0)
+            {
+                return null;
+            }
+
+            VehicleInformationEntity vehicleInformation = entities.FirstOrDefault().VehicleInfo;
+            List<VehicleLocationEntity> locationList = vehicleInformation.Locations;
             locationList.Sort((x, y) => DateTime.Compare(y.Timestamp, x.Timestamp));
             locationList.RemoveRange(1, locationList.Count - 1); 
-            vehicleInformation.LocationList = locationList;
+            vehicleInformation.Locations = locationList;
             return vehicleInformation;
            
+        }
+
+        public async Task<VehicleInformationEntity> GetLocationForVehicleForGivenTime(string vehicleReg, string lowerTimeBound, string upperTimeBound)
+        {
+            Container container = GetContainer();
+            var entities = new List<VehicleUserEntity>();
+            QueryDefinition queryDefinition = new QueryDefinition("SELECT * FROM c " +
+                                                                  "WHERE EXISTS (SELECT VALUE s FROM s " +
+                                                                  "IN c.vehicleInfo.locations WHERE s.timestamp >= @lowerTimeBound " +
+                                                                  "AND s.timestamp <= @upperTimeBound AND c.vehicleInfo.vehicleReg=@vehicleReg)")
+                .WithParameter("@vehicleReg", vehicleReg)
+                .WithParameter("@lowerTimeBound", lowerTimeBound)
+                .WithParameter("@upperTimeBound", upperTimeBound);
+
+            using (FeedIterator<VehicleUserEntity> queryResultSetIterator = container.GetItemQueryIterator<VehicleUserEntity>(queryDefinition))
+            {
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<VehicleUserEntity> response = await queryResultSetIterator.ReadNextAsync();
+                    foreach (var entity in response)
+                    {
+                        entities.Add(entity);
+                    }
+                }
+            }
+            if (entities.Count == 0)
+            {
+                return null;
+            }
+             return entities.FirstOrDefault().VehicleInfo;
+            
         }
     }
 }

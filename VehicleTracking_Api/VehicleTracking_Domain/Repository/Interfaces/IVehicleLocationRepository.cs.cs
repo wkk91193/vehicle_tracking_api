@@ -10,5 +10,7 @@ namespace VehicleTracking_Domain.Repository.Interfaces
     public interface IVehicleLocationRepository:IDataRepository<VehicleUserEntity>
     {
         public Task<VehicleInformationEntity> GetLatestLocationOfVehicle(string vehicleReg);
+
+        public Task<VehicleInformationEntity> GetLocationForVehicleForGivenTime(string vehicleReg, string lowerTimeBound, string upperTimeBound);
     }
 }

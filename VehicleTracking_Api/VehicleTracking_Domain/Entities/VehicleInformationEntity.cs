@@ -14,7 +14,7 @@ namespace VehicleTracking_Domain.Entities
         public string VehicleReg { get; set; }
 
         [JsonPropertyName("locations")]
-        public List<VehicleLocationEntity> LocationList { get; set; }
+        public List<VehicleLocationEntity> Locations { get; set; }
 
 
     }
