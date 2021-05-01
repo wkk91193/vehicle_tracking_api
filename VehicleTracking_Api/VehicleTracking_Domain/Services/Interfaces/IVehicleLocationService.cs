@@ -11,5 +11,7 @@ namespace VehicleTracking_Domain.Services.Interfaces
     {
         public Task<bool> RecordPosition(RecordPositionModel recordPositionModel);
 
+        public Task<VehicleInformationModel> GetLatestLocationOfVehicle(string vehicleReg);
+
     }
 }

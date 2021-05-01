@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Domain.Entities
 {
-    public class VehicleInformation : BaseEntity
+    public class VehicleInformationEntity : BaseEntity
     {
         [JsonPropertyName("vehicleReg")]
-        public string vehicleReg { get; set; }
+        public string VehicleReg { get; set; }
 
-        public List<VehicleLocation> locations { get; set; }
+        [JsonPropertyName("locations")]
+        public List<VehicleLocationEntity> LocationList { get; set; }
 
 
     }

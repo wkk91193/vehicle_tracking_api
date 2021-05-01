@@ -9,9 +9,9 @@ using VehicleTracking_Models.Models;
 namespace VehicleTracking_Domain.Repository.Interfaces
 {
   
-    public interface IVehicleUserRepository : IDataRepository<VehicleUser>
+    public interface IVehicleUserRepository : IDataRepository<VehicleUserEntity>
     {
-        public Task<VehicleUser> GetVehicleUserInformationByUsername(string userName);
+        public Task<VehicleUserEntity> GetVehicleUserInformationByUsername(string userName);
         public Task<bool> CheckVehicleAlreadyRegistered(string vehicleReg);
     }
 }

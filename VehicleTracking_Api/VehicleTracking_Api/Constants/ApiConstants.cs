@@ -13,6 +13,7 @@ namespace VehicleTracking_Api.Constants
         public const string USER_CREATED_SUCCESSFULLY = "User created successfully!";
         public const string STATUS_SUCCESS = "Success";
         public const string INVALID_PARAMS_GIVEN = "Invalid params given";
+        public const string NO_PARAMS_GIVEN = "No params given";
         public const string INTERNAL_SERVER_ERROR = "Internal Server error";
         public const string SOMETHING_WENT_WRONG = "Something went wrong!";
         public const string NO_SUCH_USER_EXISTS = "No such user matching the given username";

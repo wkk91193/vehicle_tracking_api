@@ -7,8 +7,8 @@ using VehicleTracking_Domain.Entities;
 
 namespace VehicleTracking_Domain.Repository.Interfaces
 {
-    public interface IVehicleLocationRepository:IDataRepository<VehicleUser>
+    public interface IVehicleLocationRepository:IDataRepository<VehicleUserEntity>
     {
-
+        public Task<VehicleInformationEntity> GetLatestLocationOfVehicle(string vehicleReg);
     }
 }

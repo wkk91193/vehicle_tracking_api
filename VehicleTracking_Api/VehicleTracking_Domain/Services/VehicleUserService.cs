@@ -29,7 +29,7 @@ namespace VehicleTracking_Domain.Services
 
         }
 
-        public async Task<VehicleUser> GetVehicleUserInformationByUsername(string userName)
+        public async Task<VehicleUserEntity> GetVehicleUserInformationByUsername(string userName)
         {
             var result = await this._vehicleUserRepository.GetVehicleUserInformationByUsername(userName);
             return result;
@@ -38,17 +38,17 @@ namespace VehicleTracking_Domain.Services
 
         public async Task SaveAdminToCosmo(RegisterAdminUserModel userModel)
         {
-            VehicleUser vehicleUser = new VehicleUser();
-            vehicleUser.Id = Guid.NewGuid().ToString();
-            vehicleUser.firstName = userModel.FirstName;
-            vehicleUser.lastName = userModel.LastName;
-            vehicleUser.email = userModel.UserName;
-            vehicleUser.roleType = ApplicationUserRoles.Admin;
+            VehicleUserEntity vehicleUserEntity = new VehicleUserEntity();
+            vehicleUserEntity.Id = Guid.NewGuid().ToString();
+            vehicleUserEntity.FirstName = userModel.FirstName;
+            vehicleUserEntity.LastName = userModel.LastName;
+            vehicleUserEntity.Email = userModel.UserName;
+            vehicleUserEntity.RoleType = ApplicationUserRoles.Admin;
 
-            Entities.VehicleInformation vehicleInfo = new Entities.VehicleInformation();
-            vehicleUser.vehicleInfo = vehicleInfo;
+            VehicleInformationEntity vehicleInfoEntity = new VehicleInformationEntity();
+            vehicleUserEntity.VehicleInfo = vehicleInfoEntity;
 
-            await this._vehicleUserRepository.AddAsync(vehicleUser);
+            await this._vehicleUserRepository.AddAsync(vehicleUserEntity);
 
         }
 
@@ -58,22 +58,22 @@ namespace VehicleTracking_Domain.Services
             {
                 return false;
             }
-            VehicleUser vehicleUser = new VehicleUser();
-            vehicleUser.Id= Guid.NewGuid().ToString();
-            vehicleUser.firstName = userModel.FirstName;
-            vehicleUser.lastName = userModel.LastName;
-            vehicleUser.email = userModel.UserName;
-            vehicleUser.roleType = ApplicationUserRoles.User;
+            VehicleUserEntity vehicleUserEntity = new VehicleUserEntity();
+            vehicleUserEntity.Id= Guid.NewGuid().ToString();
+            vehicleUserEntity.FirstName = userModel.FirstName;
+            vehicleUserEntity.LastName = userModel.LastName;
+            vehicleUserEntity.Email = userModel.UserName;
+            vehicleUserEntity.RoleType = ApplicationUserRoles.User;
 
-            Entities.VehicleInformation vehicleInfo = new Entities.VehicleInformation();
-            vehicleInfo.Id = Guid.NewGuid().ToString();
-            vehicleInfo.vehicleReg = userModel.VehicleInfo.VehicleReg;
+            VehicleInformationEntity vehicleInfoEntity = new VehicleInformationEntity();
+            vehicleInfoEntity.Id = Guid.NewGuid().ToString();
+            vehicleInfoEntity.VehicleReg = userModel.VehicleInfo.VehicleReg;
 
-            List<VehicleLocation> locationList = new List<VehicleLocation>();
-            vehicleInfo.locations = locationList;        
-            vehicleUser.vehicleInfo = vehicleInfo;
+            List<VehicleLocationEntity> locationList = new List<VehicleLocationEntity>();
+            vehicleInfoEntity.LocationList = locationList;
+            vehicleUserEntity.VehicleInfo = vehicleInfoEntity;
            
-            await this._vehicleUserRepository.AddAsync(vehicleUser);
+            await this._vehicleUserRepository.AddAsync(vehicleUserEntity);
             return true;
                             
         }

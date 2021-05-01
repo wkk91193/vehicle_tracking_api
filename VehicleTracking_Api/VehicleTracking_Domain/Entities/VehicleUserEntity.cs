@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Domain.Entities
 {
-    public class VehicleUser : BaseEntity
+    public class VehicleUserEntity : BaseEntity
     {
         [JsonPropertyName("firstName")]
-        public string firstName { get; set; }
+        public string FirstName { get; set; }
 
         [JsonPropertyName("lastName")]
-        public string lastName { get; set; }
+        public string LastName { get; set; }
 
         [JsonPropertyName("email")]
-        public string email { get; set; }
+        public string Email { get; set; }
 
         [JsonPropertyName("roleType")]
-        public string roleType { get; set; }
+        public string RoleType { get; set; }
 
         [JsonPropertyName("vehicleInfo")]
-        public VehicleInformation vehicleInfo { get; set; }
+        public VehicleInformationEntity VehicleInfo { get; set; }
       
     }
 }

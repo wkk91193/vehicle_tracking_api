@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Domain.Entities
 {
-    public class VehicleLocation : BaseEntity
+    public class VehicleLocationEntity : BaseEntity
     {
         [JsonPropertyName("latitude")]
-        public double latitude { get; set; }
+        public double Latitude { get; set; }
 
         [JsonPropertyName("longitude")]
-        public double longitude { get; set; }
+        public double Longitude { get; set; }
 
         [JsonPropertyName("timestamp")]
-        public string timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

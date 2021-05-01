@@ -90,7 +90,7 @@ namespace VehicleTracking_Api.Controllers
                     var cosmoResult = await this._locationService.RecordPosition(vehicleLocation);
                     _logger.LogInformation(ApiConstants.LOCATION_RECORDED_SUCCESSFULLY + "@{object}", vehicleLocation);
 
-                    return Ok(new Response { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.LOCATION_RECORDED_SUCCESSFULLY });
+                    return Ok(new ResponseModel { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.LOCATION_RECORDED_SUCCESSFULLY });
 
                 }
                 else
@@ -106,6 +106,54 @@ namespace VehicleTracking_Api.Controllers
 
             }
         }
+
+
+        /// <summary>
+        /// Admin receives current/latest GPS coordinates of a vehicle.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     GET api/Location/DF-3461
+        /// </remarks>
+        /// 
+        /// <param name="vehicleRegNo"></param>    
+        /// <response code="200">Vehicle location with the latest timestamp </response>
+        /// <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("GetVehicleLastLocation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> GetVehicleLastLocation(string vehicleRegNo)
+        {
+            try
+            {
+
+                if (!string.IsNullOrWhiteSpace(vehicleRegNo))
+                {
+                    _logger.LogError(ApiConstants.INVALID_PARAMS_GIVEN);
+                    return BadRequest(ApiConstants.INVALID_PARAMS_GIVEN);
+                }
+
+              
+                           
+                //var cosmoResult = await this._locationService.RecordPosition(vehicleLocation);
+                //_logger.LogInformation(ApiConstants.LOCATION_RECORDED_SUCCESSFULLY + "@{object}", vehicleLocation);
+
+                return Ok(new ResponseModel { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.LOCATION_RECORDED_SUCCESSFULLY });
+
+               
+
+            } catch (Exception ex)
+            {
+                _logger.LogError(ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiConstants.SOMETHING_WENT_WRONG);
+
+            }
+        }
+
 
     }
 }

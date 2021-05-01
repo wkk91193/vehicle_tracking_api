@@ -12,7 +12,7 @@ using VehicleTracking_Models.Models;
 namespace VehicleTracking_Domain.Repository
 {
 
-    public class VehicleUserRepository : CosmosDbDataRepository<VehicleUser>, IVehicleUserRepository
+    public class VehicleUserRepository : CosmosDbDataRepository<VehicleUserEntity>, IVehicleUserRepository
     {
         public VehicleUserRepository(ICosmosDbConfiguration cosmosDbConfiguration,
                  CosmosClient client) : base(cosmosDbConfiguration, client)
@@ -24,15 +24,15 @@ namespace VehicleTracking_Domain.Repository
         public async Task<bool> CheckVehicleAlreadyRegistered(string vehicleReg)
         {
             Container container = GetContainer();
-            var entities = new List<VehicleUser>();
+            var entities = new List<VehicleInformationEntity>();
             QueryDefinition queryDefinition = new QueryDefinition("select * from c WHERE c.vehicleInfo.vehicleReg=@vehicleReg")
                 .WithParameter("@vehicleReg", vehicleReg);
         
-            using (FeedIterator<VehicleUser> queryResultSetIterator = container.GetItemQueryIterator<VehicleUser>(queryDefinition))
+            using (FeedIterator<VehicleInformationEntity> queryResultSetIterator = container.GetItemQueryIterator<VehicleInformationEntity>(queryDefinition))
             {
                 while (queryResultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<VehicleUser> response = await queryResultSetIterator.ReadNextAsync();
+                    FeedResponse<VehicleInformationEntity> response = await queryResultSetIterator.ReadNextAsync();
                     foreach (var entity in response)
                     {
                         entities.Add(entity);
@@ -43,19 +43,19 @@ namespace VehicleTracking_Domain.Repository
 
         }
 
-        async Task<VehicleUser> IVehicleUserRepository.GetVehicleUserInformationByUsername(string userName)
+        public async Task<VehicleUserEntity> GetVehicleUserInformationByUsername(string userName)
         {
 
             Container container = GetContainer();
-            var entities = new List<VehicleUser>();
+            var entities = new List<VehicleUserEntity>();
             QueryDefinition queryDefinition = new QueryDefinition("select * from c where c.email= @username")
                 .WithParameter("@username", userName);
           
-            using (FeedIterator<VehicleUser> queryResultSetIterator = container.GetItemQueryIterator<VehicleUser>(queryDefinition))
+            using (FeedIterator<VehicleUserEntity> queryResultSetIterator = container.GetItemQueryIterator<VehicleUserEntity>(queryDefinition))
             {
                 while (queryResultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<VehicleUser> response = await queryResultSetIterator.ReadNextAsync();
+                    FeedResponse<VehicleUserEntity> response = await queryResultSetIterator.ReadNextAsync();
                     foreach (var entity in response)
                     {
                         entities.Add(entity);

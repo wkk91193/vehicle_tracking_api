@@ -27,6 +27,21 @@
             <response code="201">Successfully sent location for time t </response>
             <response code="400">Returns, errors,if the vehicleLocation object is invalid</response>  
         </member>
+        <member name="M:VehicleTracking_Api.Controllers.LocationController.GetVehicleLastLocation(System.String)">
+            <summary>
+            Admin receives current/latest GPS coordinates of a vehicle.
+            </summary>
+            
+            <remarks>
+            Sample request:
+            
+                GET api/Location/DF-3461
+            </remarks>
+            
+            <param name="vehicleRegNo"></param>    
+            <response code="200">Vehicle location with the latest timestamp </response>
+            <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
+        </member>
         <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)">
             <summary>
             Registers a new user.

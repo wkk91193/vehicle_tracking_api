@@ -87,7 +87,7 @@ namespace VehicleTracking_Api.Controllers
                     if (userExists != null)
                     {
                         _logger.LogError(ApiConstants.USER_ALREADY_EXISTS_MESSAGE + " {@user}", newUser);
-                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
                     }
 
                     ApplicationUser user = new ApplicationUser()
@@ -101,7 +101,7 @@ namespace VehicleTracking_Api.Controllers
                     if (!result.Succeeded)
                     {
                         _logger.LogError(ApiConstants.USER_CREATION_FAILED + " {@result}", result);
-                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_CREATION_FAILED });
+                        return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_CREATION_FAILED });
                     }
 
                     if (!await _roleManager.RoleExistsAsync(ApplicationUserRoles.User))
@@ -114,11 +114,11 @@ namespace VehicleTracking_Api.Controllers
                     {
                         await CleanupResources.RemoveUserFromDBAsync(user, this._userManager);
                         _logger.LogError(ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND);
-                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND });
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND });
                     }
 
                     _logger.LogInformation("Succesfully registered user @{object}", newUser);
-                    return Ok(new Response { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.USER_CREATED_SUCCESSFULLY });
+                    return Ok(new ResponseModel { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.USER_CREATED_SUCCESSFULLY });
 
                 }
                 else
@@ -178,7 +178,7 @@ namespace VehicleTracking_Api.Controllers
                     if (userExists != null)
                     {
                         _logger.LogError(ApiConstants.USER_ALREADY_EXISTS_MESSAGE + " {@user}", newUser);
-                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
                     }
 
                     ApplicationUser user = new ApplicationUser()
@@ -192,7 +192,7 @@ namespace VehicleTracking_Api.Controllers
                     if (!result.Succeeded)
                     {
                         _logger.LogError(ApiConstants.USER_CREATION_FAILED + " {@result}", result);
-                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_CREATION_FAILED });
+                        return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.USER_CREATION_FAILED });
                     }
 
 
@@ -202,7 +202,7 @@ namespace VehicleTracking_Api.Controllers
 
                     _logger.LogInformation("Succesfully registered admin user @{object}", newUser);
 
-                    return Ok(new Response { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.USER_CREATED_SUCCESSFULLY });
+                    return Ok(new ResponseModel { Status = ApiConstants.STATUS_SUCCESS, Message = ApiConstants.USER_CREATED_SUCCESSFULLY });
 
                 }
                 else
@@ -259,23 +259,23 @@ namespace VehicleTracking_Api.Controllers
                     if (userExists == null)
                     {
                         _logger.LogError(ApiConstants.NO_SUCH_USER_EXISTS + " {@user}", loginUser);
-                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.NO_SUCH_USER_EXISTS });
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.NO_SUCH_USER_EXISTS });
                     }
                     var passwordValid = await this._userManager.CheckPasswordAsync(userExists, loginUser.Password);
                     if (!passwordValid)
                     {
                         _logger.LogError(ApiConstants.INCORRECT_USERNAME_PASSWORD + " {@user}", loginUser);
-                        return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.INCORRECT_USERNAME_PASSWORD });
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = ApiConstants.STATUS_ERROR, Message = ApiConstants.INCORRECT_USERNAME_PASSWORD });
                     }
 
                     var userVehicleInformation = await this._userService.GetVehicleUserInformationByUsername(loginUser.Username);
 
                     List<Claim> authClaims = null;
-                    if (userVehicleInformation.vehicleInfo.vehicleReg == null)
+                    if (userVehicleInformation.VehicleInfo.VehicleReg == null)
                     {
                         authClaims = new List<Claim>{
-                            new Claim(ClaimTypes.Role,userVehicleInformation.roleType),
-                            new Claim("Username", userVehicleInformation.email),
+                            new Claim(ClaimTypes.Role,userVehicleInformation.RoleType),
+                            new Claim("Username", userVehicleInformation.Email),
                             new Claim("VehicleReg","")
                         };
 
@@ -283,9 +283,9 @@ namespace VehicleTracking_Api.Controllers
                     else
                     {
                         authClaims = new List<Claim>{
-                            new Claim(ClaimTypes.Role,userVehicleInformation.roleType),
-                            new Claim("Username", userVehicleInformation.email),
-                            new Claim("VehicleReg",userVehicleInformation.vehicleInfo.vehicleReg)
+                            new Claim(ClaimTypes.Role,userVehicleInformation.RoleType),
+                            new Claim("Username", userVehicleInformation.Email),
+                            new Claim("VehicleReg",userVehicleInformation.VehicleInfo.VehicleReg)
                         };
                     }
 

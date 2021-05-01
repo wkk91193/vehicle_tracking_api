@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace VehicleTracking_Models.Models
 {
-    public class VehicleInformation
+    public class ResponseModel
     {
-     
-        public string VehicleReg { get; set; }
-
-       
-
+        public string Status { get; set; }
+        public string Message { get; set; }
     }
 }
