@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using VehicleTracking_Api.SeedData;
 
 namespace VehicleTracking_Api
@@ -23,10 +24,27 @@ namespace VehicleTracking_Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+            .ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                // We have to be precise on the logging levels
+                logging.AddConsole();
+                logging.AddDebug();
+                logging.AddAzureWebAppDiagnostics();
+            })
+            .ConfigureServices(services =>
+            {
+                services.Configure<AzureFileLoggerOptions>(options =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    options.FileName = "my-azure-diagnostics-";
+                    options.FileSizeLimit = 50 * 1024;
+                    options.RetainedFileCountLimit = 5;
                 });
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                    webBuilder.UseStartup<Startup>();
+            });
 
         private static async Task SeedDatabase(IHost host)
         {

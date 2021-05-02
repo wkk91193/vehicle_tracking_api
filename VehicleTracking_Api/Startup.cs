@@ -29,11 +29,6 @@ namespace VehicleTracking_Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.RollingFile(Path.Combine(
-                configuration["logFileName"], "Log-{Date}.txt"))
-            .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }

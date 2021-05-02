@@ -30,13 +30,13 @@ namespace VehicleTracking_Api.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public UserController(IVehicleUserService userService, ILogger<UserController> logger,
+        public UserController(IVehicleUserService userService, ILoggerFactory loggerFactory,
             UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
             IConfiguration configuration)
 
         {
             this._userService = userService;
-            this._logger = logger;
+            this._logger = loggerFactory.CreateLogger("UserLogger");
             this._userManager = userManager;
             this._roleManager = roleManager;
             this._configuration = configuration;

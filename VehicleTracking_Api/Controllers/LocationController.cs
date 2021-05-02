@@ -10,11 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using VehicleTracking_Api.Constants;
 using VehicleTracking_Api.Utilities.General;
-using VehicleTracking_Api.Utilities.Security;
 using VehicleTracking_Api.Utilities.Validators;
-using VehicleTracking_Data.Identity;
 using VehicleTracking_Domain.Services.Interfaces;
 using VehicleTracking_Models.Models;
 
@@ -30,11 +27,11 @@ namespace VehicleTracking_Api.Controllers
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
 
-        public LocationController(IVehicleLocationService locationService, ILogger<UserController> logger,
+        public LocationController(IVehicleLocationService locationService, ILoggerFactory loggerFactory,
                                   IConfiguration configuration)
         {
             this._locationService = locationService;
-            this._logger = logger;
+            this._logger = loggerFactory.CreateLogger("LocationLogger");
             this._configuration = configuration;
 
         }
