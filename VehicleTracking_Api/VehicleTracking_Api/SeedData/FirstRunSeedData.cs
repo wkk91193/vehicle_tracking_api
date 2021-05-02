@@ -2,10 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using VehicleTracking_Data.DbContext;
 using VehicleTracking_Data.Identity;
 using VehicleTracking_Domain.Services.Interfaces;
 using VehicleTracking_Models.Models;
