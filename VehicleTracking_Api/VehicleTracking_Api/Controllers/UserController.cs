@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using VehicleTracking_Api.Constants;
 using VehicleTracking_Api.Utilities.Cleanup;
 using VehicleTracking_Api.Utilities.Security;
 using VehicleTracking_Api.Utilities.Validators;
