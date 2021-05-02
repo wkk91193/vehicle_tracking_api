@@ -198,7 +198,7 @@ namespace VehicleTracking_Api.Controllers
                     return Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE });
                 }
 
-                _logger.LogInformation(Constants.ApiConstants.LOCATIONS_RECEIVED_SUCCESSFULLY + "@{object}", cosmoResult);
+                _logger.LogInformation(Constants.ApiConstants.LOCATIONS_RECEIVED_SUCCESSFULLY + "@{object}", JsonConvert.SerializeObject(cosmoResult));
                 return Ok(cosmoResult);
 
             }
