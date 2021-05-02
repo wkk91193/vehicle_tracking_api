@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using VehicleTracking_Api.Utilities.Cleanup;
 using VehicleTracking_Api.Utilities.Security;
 using VehicleTracking_Api.Utilities.Validators;
@@ -83,8 +84,8 @@ namespace VehicleTracking_Api.Controllers
                     var userExists = await _userManager.FindByNameAsync(newUser.UserName);
                     if (userExists != null)
                     {
-                        _logger.LogError(Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE + " {@user}", newUser);
-                        return base.StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
+                        _logger.LogError(Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE + " {@user}", JsonConvert.SerializeObject(newUser));
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
                     }
 
                     ApplicationUser user = new ApplicationUser()
@@ -97,8 +98,8 @@ namespace VehicleTracking_Api.Controllers
                     var result = await _userManager.CreateAsync(user, newUser.Password);
                     if (!result.Succeeded)
                     {
-                        _logger.LogError(Constants.ApiConstants.USER_CREATION_FAILED + " {@result}", result);
-                        return base.StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_CREATION_FAILED });
+                        _logger.LogError(Constants.ApiConstants.USER_CREATION_FAILED + " {@result}", JsonConvert.SerializeObject(result));
+                        return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_CREATION_FAILED });
                     }
 
                     if (!await _roleManager.RoleExistsAsync(ApplicationUserRoles.User))
@@ -111,16 +112,16 @@ namespace VehicleTracking_Api.Controllers
                     {
                         await CleanupResources.RemoveUserFromDBAsync(user, this._userManager);
                         _logger.LogError(Constants.ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND);
-                        return base.StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND });
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.VEHICLE_REGISTRATION_ALREADY_FOUND });
                     }
 
-                    _logger.LogInformation("Succesfully registered user @{object}", newUser);
-                    return base.Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.USER_CREATED_SUCCESSFULLY });
+                    _logger.LogInformation("Succesfully registered user @{object}", JsonConvert.SerializeObject(newUser));
+                    return Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.USER_CREATED_SUCCESSFULLY });
 
                 }
                 else
                 {
-                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
+                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", JsonConvert.SerializeObject(errors));
                     return BadRequest(errors);
                 }
             }
@@ -131,8 +132,8 @@ namespace VehicleTracking_Api.Controllers
                     UserName = newUser.UserName
                 };
                 await CleanupResources.RemoveUserFromDBAsync(user, this._userManager);
-                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
-                return base.StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
+                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", JsonConvert.SerializeObject(ex));
+                return StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
 
             }
         }
@@ -174,8 +175,8 @@ namespace VehicleTracking_Api.Controllers
                     var userExists = await _userManager.FindByNameAsync(newUser.UserName);
                     if (userExists != null)
                     {
-                        _logger.LogError(Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE + " {@user}", newUser);
-                        return base.StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
+                        _logger.LogError(Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE + " {@user}", JsonConvert.SerializeObject(newUser));
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_ALREADY_EXISTS_MESSAGE });
                     }
 
                     ApplicationUser user = new ApplicationUser()
@@ -189,7 +190,7 @@ namespace VehicleTracking_Api.Controllers
                     if (!result.Succeeded)
                     {
                         _logger.LogError(Constants.ApiConstants.USER_CREATION_FAILED + " {@result}", result);
-                        return base.StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_CREATION_FAILED });
+                        return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.USER_CREATION_FAILED });
                     }
 
 
@@ -197,14 +198,14 @@ namespace VehicleTracking_Api.Controllers
 
                     await _userService.SaveAdminToCosmo(newUser);
 
-                    _logger.LogInformation("Succesfully registered admin user @{object}", newUser);
+                    _logger.LogInformation("Succesfully registered admin user @{object}", JsonConvert.SerializeObject(newUser));
 
-                    return base.Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.USER_CREATED_SUCCESSFULLY });
+                    return Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.USER_CREATED_SUCCESSFULLY });
 
                 }
                 else
                 {
-                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
+                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", JsonConvert.SerializeObject(errors));
                     return BadRequest(errors);
                 }
             }
@@ -215,8 +216,8 @@ namespace VehicleTracking_Api.Controllers
                 {
                     await _userManager.DeleteAsync(appUser);
                 }
-                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
-                return base.StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
+                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
 
             }
         }
@@ -255,14 +256,14 @@ namespace VehicleTracking_Api.Controllers
                     var userExists = await this._userManager.FindByNameAsync(loginUser.Username);
                     if (userExists == null)
                     {
-                        _logger.LogError(Constants.ApiConstants.NO_SUCH_USER_EXISTS + " {@user}", loginUser);
-                        return base.StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.NO_SUCH_USER_EXISTS });
+                        _logger.LogError(Constants.ApiConstants.NO_SUCH_USER_EXISTS + " {@user}", JsonConvert.SerializeObject(loginUser));
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.NO_SUCH_USER_EXISTS });
                     }
                     var passwordValid = await this._userManager.CheckPasswordAsync(userExists, loginUser.Password);
                     if (!passwordValid)
                     {
-                        _logger.LogError(Constants.ApiConstants.INCORRECT_USERNAME_PASSWORD + " {@user}", loginUser);
-                        return base.StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.INCORRECT_USERNAME_PASSWORD });
+                        _logger.LogError(Constants.ApiConstants.INCORRECT_USERNAME_PASSWORD + " {@user}", JsonConvert.SerializeObject(loginUser));
+                        return StatusCode(StatusCodes.Status400BadRequest, new ResponseModel { Status = Constants.ApiConstants.STATUS_ERROR, Message = Constants.ApiConstants.INCORRECT_USERNAME_PASSWORD });
                     }
 
                     var userVehicleInformation = await this._userService.GetVehicleUserInformationByUsername(loginUser.Username);
@@ -305,13 +306,13 @@ namespace VehicleTracking_Api.Controllers
                 }
                 else
                 {
-                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
+                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", JsonConvert.SerializeObject(errors));
                     return BadRequest(errors);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
+                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex.ToString());
                 return base.StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
 
             }

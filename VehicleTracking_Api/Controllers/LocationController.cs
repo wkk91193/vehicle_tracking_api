@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using VehicleTracking_Api.Utilities.General;
 using VehicleTracking_Api.Utilities.Validators;
 using VehicleTracking_Domain.Services.Interfaces;
@@ -79,27 +80,27 @@ namespace VehicleTracking_Api.Controllers
                         var vehiclReg = claims.Where(p => p.Type == "VehicleReg").FirstOrDefault()?.Value;
                         if (!username.Equals(vehicleLocation.UserName) || !vehiclReg.Equals(vehicleLocation.VehicleReg))
                         {
-                            _logger.LogError(Constants.ApiConstants.USERNAME_OR_VEHICLE_REGISTERATION_DOES_NOT_MATCH + " {@exception}", vehicleLocation);
+                            _logger.LogError(Constants.ApiConstants.USERNAME_OR_VEHICLE_REGISTERATION_DOES_NOT_MATCH + " {@exception}", JsonConvert.SerializeObject(vehicleLocation));
                             return StatusCode(StatusCodes.Status400BadRequest, Constants.ApiConstants.USERNAME_OR_VEHICLE_REGISTERATION_DOES_NOT_MATCH);
                         }
                     }
 
                     //Append position to location array                              
                     var cosmoResult = await this._locationService.RecordPosition(vehicleLocation);
-                    _logger.LogInformation(Constants.ApiConstants.LOCATION_RECORDED_SUCCESSFULLY + "@{object}", vehicleLocation);
+                    _logger.LogInformation(Constants.ApiConstants.LOCATION_RECORDED_SUCCESSFULLY + "@{object}", JsonConvert.SerializeObject(vehicleLocation));
 
                     return Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.LOCATION_RECORDED_SUCCESSFULLY });
 
                 }
                 else
                 {
-                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", errors);
+                    _logger.LogError(Constants.ApiConstants.INVALID_PARAMS_GIVEN + "{@errors}", JsonConvert.SerializeObject(errors));
                     return BadRequest(errors);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
+                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex.ToString());
                 return  StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
 
             }
@@ -138,17 +139,17 @@ namespace VehicleTracking_Api.Controllers
                 var cosmoResult = await this._locationService.GetLatestLocationOfVehicle(vehicleRegNo);
                 if (cosmoResult == null)
                 {
-                    _logger.LogInformation(Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE + "@{object}", cosmoResult);
+                    _logger.LogInformation(Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE + "@{object}", JsonConvert.SerializeObject(cosmoResult));
                     return Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE });
                 }
 
-                _logger.LogInformation(Constants.ApiConstants.LATEST_LOCATION_RETRIEVED_SUCCESSFULLY + "@{object}", cosmoResult);
+                _logger.LogInformation(Constants.ApiConstants.LATEST_LOCATION_RETRIEVED_SUCCESSFULLY + "@{object}", JsonConvert.SerializeObject(cosmoResult));
                 return Ok(cosmoResult);
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
+                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
 
             }
@@ -193,7 +194,7 @@ namespace VehicleTracking_Api.Controllers
                 var cosmoResult = await this._locationService.GetLocationForVehicleForGivenTime(vehicleRegNo,lowerBoundTime,upperBoundTime);
                 if (cosmoResult == null)
                 {
-                    _logger.LogInformation(Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE + "@{object}", cosmoResult);
+                    _logger.LogInformation(Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE + "@{object}", JsonConvert.SerializeObject(cosmoResult));
                     return Ok(new ResponseModel { Status = Constants.ApiConstants.STATUS_SUCCESS, Message = Constants.ApiConstants.NO_LOCATION_RECORDED_FOR_THE_VEHICLE });
                 }
 
@@ -203,7 +204,7 @@ namespace VehicleTracking_Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex);
+                _logger.LogError(Constants.ApiConstants.INTERNAL_SERVER_ERROR + " {@exception}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError, Constants.ApiConstants.SOMETHING_WENT_WRONG);
 
             }
