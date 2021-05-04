@@ -53,8 +53,9 @@ namespace VehicleTracking_Api.Controllers
         ///       "longitude": "100.616405",
         ///       "timestamp":"2020-07-25T07:26:51.2395361Z"
         ///     }
+        ///     Headers
+        ///        Authorization: Bearer JWT_Token_Value
         /// </remarks>
-        /// 
         /// <param name="vehicleLocation"></param>    
         /// <returns>Success or Error</returns>
         /// <response code="201">Successfully sent location for time t </response>
@@ -108,13 +109,17 @@ namespace VehicleTracking_Api.Controllers
 
 
         /// <summary>
-        /// Admin receives current/latest GPS coordinates of a vehicle.
+        ///   Admin receives current/latest GPS coordinates of a vehicle.
         /// </summary>
         /// 
         /// <remarks>
         /// Sample request:
         /// 
         ///     GET api/Location/GetVehicleLastLocation?vehicleRegNo=DF-3461
+        ///     
+        /// 
+        ///     Headers
+        ///        Authorization: Bearer JWT_Token_Value
         /// </remarks>
         /// 
         /// <param name="vehicleRegNo"></param>    
@@ -122,7 +127,7 @@ namespace VehicleTracking_Api.Controllers
         /// <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
         [Authorize(Roles = "Admin")]
         [HttpGet("GetVehicleLastLocation")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(VehicleInformationModel),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public async Task<IActionResult> GetVehicleLastLocation(string vehicleRegNo)
@@ -156,13 +161,12 @@ namespace VehicleTracking_Api.Controllers
         }
 
         /// <summary>
-        /// Admin receives GPS coordinates of a vehicle for a time interval
+        ///   Admin receives GPS coordinates of a vehicle for a time interval
         /// </summary>
         /// 
         /// <remarks>
-        /// Sample request:
         /// 
-        ///     GET /api/Location/GetVehicleLocationForTimeInterval?vehicleRegNo=DF-3461&lowerBoundTime=2020-07-25 07:26:51.239&upperBoundTime=2020-07-25 07:40:51.239
+        ///
         ///     
         /// </remarks>
         /// 
@@ -171,7 +175,7 @@ namespace VehicleTracking_Api.Controllers
         /// <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
         [Authorize(Roles = "Admin")]
         [HttpGet("GetVehicleLocationForTimeInterval")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(VehicleInformationModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public async Task<IActionResult> GetVehicleLocationForTimeInterval(string vehicleRegNo,string lowerBoundTime, string upperBoundTime)

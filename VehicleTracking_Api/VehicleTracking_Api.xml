@@ -20,8 +20,9 @@
                   "longitude": "100.616405",
                   "timestamp":"2020-07-25T07:26:51.2395361Z"
                 }
+                Headers
+                   Authorization: Bearer JWT_Token_Value
             </remarks>
-            
             <param name="vehicleLocation"></param>    
             <returns>Success or Error</returns>
             <response code="201">Successfully sent location for time t </response>
@@ -29,20 +30,38 @@
         </member>
         <member name="M:VehicleTracking_Api.Controllers.LocationController.GetVehicleLastLocation(System.String)">
             <summary>
-            Admin receives current/latest GPS coordinates of a vehicle.
+              Admin receives current/latest GPS coordinates of a vehicle.
             </summary>
             
             <remarks>
             Sample request:
             
                 GET api/Location/GetVehicleLastLocation?vehicleRegNo=DF-3461
+                
+            
+                Headers
+                   Authorization: Bearer JWT_Token_Value
             </remarks>
             
             <param name="vehicleRegNo"></param>    
             <response code="200">Vehicle location with the latest timestamp </response>
             <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
         </member>
-        <!-- Badly formed XML comment ignored for member "M:VehicleTracking_Api.Controllers.LocationController.GetVehicleLocationForTimeInterval(System.String,System.String,System.String)" -->
+        <member name="M:VehicleTracking_Api.Controllers.LocationController.GetVehicleLocationForTimeInterval(System.String,System.String,System.String)">
+             <summary>
+               Admin receives GPS coordinates of a vehicle for a time interval
+             </summary>
+             
+             <remarks>
+             
+            
+                 
+             </remarks>
+             
+             <param name="vehicleRegNo"></param>    
+             <response code="200">Vehicle location with the latest timestamp </response>
+             <response code="400">Returns, errors,if the vehicleRegNo is invalid</response>  
+        </member>
         <member name="M:VehicleTracking_Api.Controllers.UserController.RegisterUser(VehicleTracking_Models.Models.RegisterUserModel)">
             <summary>
             Registers a new user.

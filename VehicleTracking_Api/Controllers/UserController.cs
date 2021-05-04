@@ -242,7 +242,7 @@ namespace VehicleTracking_Api.Controllers
         /// <response code="400">Returns, errors,if the user object is invalid</response>  
         [AllowAnonymous]
         [HttpPost("GetToken")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(JWTToken), 200)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public async Task<IActionResult> GetToken([FromBody] LoginUserModel loginUser)
