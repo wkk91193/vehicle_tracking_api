@@ -44,7 +44,8 @@ namespace VehicleTracking_Api
             //For Swagger documentation
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VehicleTracking_Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VehicleTracking_Api", Version = "v1" });         
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -96,6 +97,8 @@ namespace VehicleTracking_Api
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
             });
+
+            services.AddApplicationInsightsTelemetry();
         }
 
 
@@ -121,7 +124,7 @@ namespace VehicleTracking_Api
                 endpoints.MapControllers();
             });
 
-           
+
         }
     }
 }
