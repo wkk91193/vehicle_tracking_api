@@ -51,7 +51,7 @@ namespace VehicleTracking_Api.Controllers
         ///       "vehicleReg": "DF-3456",
         ///       "latitude": "13.678639",
         ///       "longitude": "100.616405",
-        ///       "timestamp":"2020-07-25T07:26:51.2395361Z"
+        ///       "timestamp":"2020-07-25 07:36:51.239"
         ///     }
         ///     Headers
         ///        Authorization: Bearer JWT_Token_Value
@@ -115,9 +115,11 @@ namespace VehicleTracking_Api.Controllers
         /// <remarks>
         /// Sample request:
         /// 
-        ///     GET api/Location/GetVehicleLastLocation?vehicleRegNo=DF-3461
+        ///     GET api/Location/GetVehicleLastLocation
         ///     
-        /// 
+        ///     Query Params
+        ///        vehicleRegNo :DF-3461
+        ///        
         ///     Headers
         ///        Authorization: Bearer JWT_Token_Value
         /// </remarks>
@@ -166,8 +168,15 @@ namespace VehicleTracking_Api.Controllers
         /// 
         /// <remarks>
         /// 
-        ///
+        ///     GET api/Location/GetVehicleLocationForTimeInterval
         ///     
+        ///     Query Params
+        ///        vehicleRegNo   : DF-3461
+        ///        lowerBoundTime : 2020-07-25 07:26:51.239
+        ///        upperBoundTime : 2020-07-25 07:40:51.239
+        ///        
+        ///     Headers
+        ///        Authorization: Bearer JWT_Token_Value
         /// </remarks>
         /// 
         /// <param name="vehicleRegNo"></param>    
