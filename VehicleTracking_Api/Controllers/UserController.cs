@@ -153,6 +153,9 @@ namespace VehicleTracking_Api.Controllers
         ///       "userName": "mikeandrew@gmail.com",
         ///       "password": "DDF323PFGssd"
         ///     }
+        ///     
+        ///     Headers
+        ///        Authorization: Bearer JWT_Token_Value
         /// </remarks>
         /// 
         /// <param name="newUser"></param>    
