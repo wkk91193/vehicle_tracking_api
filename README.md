@@ -47,6 +47,8 @@ _Note: Click on Explore API button to see the list of the APIs_
 
 ## How to run locally.
 
+0.Please copy and replace the appSetting.json file provide via email.
+
 1. Open the solution on Visual Studio 2019 or later.
 
 2. Build the solution.
