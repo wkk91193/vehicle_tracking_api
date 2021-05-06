@@ -47,13 +47,11 @@ _Note: Click on Explore API button to see the list of the APIs_
 
 ## How to run locally.
 
-1. Please copy and replace the AppSetting.json file provided you via email.
+1. Open the solution on Visual Studio 2019 or later.
 
-2. Open the solution on Visual Studio 2019 or later.
+2. Build the solution.
 
-3. Build the solution.
+3. Run solution.
 
-4. Run solution.
-
-5. Use swagger Try out option/Postman rest client to test locally.
+4. Use swagger Try out option/Postman rest client to test locally.
 
