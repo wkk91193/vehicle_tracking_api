@@ -55,3 +55,5 @@ _Note: Click on Explore API button to see the list of the APIs_
 
 4. Use swagger Try out option/Postman rest client to test locally.
 
+5. For security concerns only an existing admin user can create another admin user, to check the credentials of an existing admin user please refer to appSettings.json file 
+
