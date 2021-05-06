@@ -4,9 +4,8 @@ This solution will to be able to track vehicles position using GPS navigation. A
 
 ## Architechure
 
-<p align="center">
- ![](/VehicleTracking_Api/Images/VehicleTracking.jpg) 
-</p>
+
+ ![High level architechure](https://github.com/wkk91193/vehicle_tracking_api/blob/master/VehicleTracking_Api/Images/VehicleTracking.jpg) 
 
 The API gateway will recieve requests from the any client facing Application and direct them to their respective API endpoint where it will processed. Identity and Role information will be stored on the SQL Database, while the Vehicle and it's location information will stored on the Non relataional (Cosmos Databases)
 
@@ -48,13 +47,13 @@ _Note: Click on Explore API button to see the list of the APIs_
 
 ## How to run locally.
 
-1. Please copy and replace the AppSetting.json file provided you via email.
+1. Open the solution on Visual Studio 2019 or later.
 
-2. Open the solution on Visual Studio 2019 or later.
+2. Build the solution.
 
-3. Build the solution.
+3. Run solution.
 
-4. Run solution.
+4. Use swagger Try out option/Postman rest client to test locally.
 
-5. Use swagger Try out option/Postman rest client to test locally.
+5. For security concerns only an existing admin user can create another admin user, to check the credentials of an existing admin user please refer to appSettings.json file 
 
