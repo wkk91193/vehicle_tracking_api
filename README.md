@@ -4,9 +4,8 @@ This solution will to be able to track vehicles position using GPS navigation. A
 
 ## Architechure
 
-<p align="center">
- ![](/VehicleTracking_Api/Images/VehicleTracking.jpg) 
-</p>
+
+ ![High level architechure](https://github.com/wkk91193/vehicle_tracking_api/blob/master/VehicleTracking_Api/Images/VehicleTracking.jpg) 
 
 The API gateway will recieve requests from the any client facing Application and direct them to their respective API endpoint where it will processed. Identity and Role information will be stored on the SQL Database, while the Vehicle and it's location information will stored on the Non relataional (Cosmos Databases)
 
